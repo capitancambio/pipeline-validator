@@ -1,0 +1,13 @@
+{
+	"name": "pipeline-validator",
+	"description": "A simple front end for daisy pipeline 2 based validation scripts",
+	"version": "0.0.1",
+	"dependencies": {
+		"express": "3.x",
+		"socket.io": "0.9.13",
+		"adm-zip":"0.2.1",
+		"elementtree":"0.1.5",
+		"request":"2.14.0",
+		"freeport":"1.0.0"
+	}
+}

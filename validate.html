@@ -1,0 +1,51 @@
+<html>
+	<head>
+		<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+		<script>
+			$(document).ready(function() {
+				$("#pb").progressbar({ value: 0 });
+			});
+			var socket = io.connect('http://localhost:8080');
+			socket.on('status', function (data){
+				//document.write(data);
+				if(data=="IDLE"){
+					$("#msg").text("Starting validation");
+					$("#pb").progressbar({ value: 33 });
+				}	
+				if(data=="RUNNING"){
+					$("#msg").text("Validating");
+					$("#pb").progressbar({ value: 66 });
+				}	
+				if(data=="DONE"){
+
+					$("#msg").text("Validation finished");
+					$("#pb").progressbar({ value: 100 });
+				}	
+				if(data=="ERROR"){
+
+					$("#msg").text("Validation crashed");
+					$("#pb").progressbar({ value: 100 });
+				}	
+			});
+
+			socket.on('report', function (data){
+				//document.write(data);
+				var xmlDoc=$.parseXML(data);
+				var body=$(xmlDoc).find('body');
+				$("#report").html(body);
+
+			});
+		</script>
+	</head>
+	<body>
+		<div style="text-align: center">
+			<h1 id="msg">Loading file</h1>
+			<div id="pb" style="width:70%"></div>
+		</div>
+		<div id="report"></div>
+	</body>
+</html>
+
