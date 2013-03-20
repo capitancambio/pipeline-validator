@@ -7,7 +7,7 @@ A simple front end for [daisy pipeline 2](http://code.google.com/p/daisy-pipelin
 How to get it up and running
 ----------------------------
 1. Clone this experiment . 
-2. Get (node.js)[www.nodejs.com].
+2. Get [node.js](www.nodejs.com).
 3. Install the dependencies :
 ```
     javi@chaos:~/src/pipeline-validator$ npm -d install
