@@ -9,17 +9,35 @@ var url=require('url');
 var et = require('elementtree');
 var freeport=require('freeport');
 var util=require('util');
+var crypto=require('crypto');
 
+var moment=require('moment');
 //start server and socket.io
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
 
+String.prototype.rjust = function( width, padding ) {
+	padding = padding || " ";
+	padding = padding.substr( 0, 1 );
+	if( this.length < width )
+		return padding.repeat( width - this.length ) + this;
+	else
+		return this;
+};
 
+String.prototype.repeat = function( num ) {
+	for( var i = 0, buf = ""; i < num; i++ ){
+		buf += this;
+	}
+	return buf;
+};
 //Configuration, move this to a external json file
 conf={};
 conf.pipeline="http://localhost:8182/ws/";
 conf.validator="dtbook-validator";
 conf.listener="http://localhost";
+conf.client="clientid";
+conf.secret="supersecret";
 
 
 app.use(express.bodyParser());
@@ -102,6 +120,7 @@ function fetchResult(id,forward){
 	//http://localhost:8182/ws/jobs/3077abc1-8f9e-4332-8dfe-dc4828d2863b/result/port/html-report/idx/html-report/html-report.xml
 	console.log('fetching result');	
 	var uri=conf.pipeline+'jobs/'+id+'/result/port/html-report/idx/html-report/html-report.xml';
+	uri=authenticate(uri);
 	var req=request.get(uri,function (error,response,body){
 		if(error){
 			console.log("Error getting report");	
@@ -118,7 +137,8 @@ function jobFromXml(xml){
 }
 
 function sendJob(xmlreq,path){
-	var req=request.post(conf.pipeline+'jobs',function(error,response,body){
+	var url=authenticate(conf.pipeline+'jobs');
+	var req=request.post(url,function(error,response,body){
 
 		if(error){
 			console.log('Error sending job: %s',error);
@@ -135,6 +155,26 @@ function sendJob(xmlreq,path){
 	form.append('job-request',xmlreq);
 }
 
+function authenticate(url){
+	if ("client" in conf && "secret" in conf){
+		console.log("authenticating");
+		var client=conf.client;
+		var secret=conf.secret;
+		var time=moment().format('YYYY-MM-DD[T]HH:mm:ss[Z]');
+		var nonce = String(Math.floor(Math.random()*Math.pow(2,31))).rjust(30,"0");
+		var args=url+"?authid="+client+"&time="+time+"&nonce="+nonce;
+		var hash=crypto.createHmac('sha1',secret);
+		hash.update(args);
+		var sum=hash.digest('base64');
+		args+="&sign="+sum;
+		console.log(args);
+		return args;
+	}else{
+		return url;
+	}
+
+
+}
 function buildJobRequest(port, listener ){
 	//var file= new zip(req.files.test.path);
 	//file.getEntries().forEach(function (entry){

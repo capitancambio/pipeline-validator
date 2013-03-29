@@ -8,6 +8,7 @@
 		"adm-zip":"0.2.1",
 		"elementtree":"0.1.5",
 		"request":"2.14.0",
-		"freeport":"1.0.0"
+		"freeport":"1.0.0",
+		"moment":"2.0.0"
 	}
 }
