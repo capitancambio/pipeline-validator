@@ -16,7 +16,7 @@ How to get it up and running
 ```
     javi@chaos:~/src/pipeline-validator$ node app.js
 ```
-5. Start the pipeline in remote mode with authentication disabled.
+5. Start the pipeline in remote mode with authentication disabled or make sure that the clientid and secret are correctly set.
 6. Open your browser of choice and point it to localhost:8080
 
 Caveats and limitations
