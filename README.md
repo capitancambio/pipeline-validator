@@ -23,6 +23,5 @@ Caveats and limitations
 -----------------------
 
 * It's ugly.
-* Currently it only works with the push-notifier branch from the pipeline framework.
 * It will only work with the hauy_valid example as the xml file name is hardcoded in the server :laughing:. 
-* No authenticated mode support yet.
+
